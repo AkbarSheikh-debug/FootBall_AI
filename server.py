@@ -1,5 +1,5 @@
 import os
-import avi_mp4
+import mp4
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from process.video_processing import process_video 
 
@@ -25,8 +25,8 @@ def upload_video():
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
-    if file and (file.filename.endswith('.mp4') or file.filename.endswith('.avi')):  # Kiểm tra file có phải là video không
-        file_path = os.path.join(uploads_path, file.filename)  # Lưu file vào thư mục static/uploads
+    if file and (file.filename.endswith('.mp4') or file.filename.endswith('.avi')): 
+        file_path = os.path.join(uploads_path, file.filename)  
         file.save(file_path)
         return jsonify({'file_path': file_path}), 200
     return jsonify({'error': 'Invalid file format'}), 400
@@ -68,7 +68,7 @@ def video_list():
         if video.endswith('.avi'):
             avi_path = os.path.join(folder_path, video)
             mp4_path = os.path.join(folder_path, video.replace('.avi', '.mp4'))
-            avi_mp4.convert_avi_to_mp4(avi_path, mp4_path)
+            mp4.convert_avi_to_mp4(avi_path, mp4_path)
             os.remove(avi_path)  # Delete AVI
 
     # Update videos list
